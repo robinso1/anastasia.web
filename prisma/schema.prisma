@@ -1,0 +1,133 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Модель пользователя
+model User {
+  id            String    @id @default(uuid())
+  email         String    @unique
+  password      String
+  firstName     String
+  lastName      String
+  role          Role      @default(JUNIOR_MANAGER)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  // Связи
+  sentMessages     Message[]  @relation("SentMessages")
+  receivedMessages Message[]  @relation("ReceivedMessages")
+  tasks           Task[]     @relation("UserTasks")
+  assignedTasks   Task[]     @relation("AssignedTasks")
+  projects        Project[]  @relation("UserProjects")
+  supervisor      User?      @relation("UserSupervisor", fields: [supervisorId], references: [id])
+  supervisorId    String?
+  subordinates    User[]     @relation("UserSupervisor")
+}
+
+// Роли пользователей
+enum Role {
+  ADMIN
+  MANAGER
+  ASSISTANT_MANAGER
+  JUNIOR_MANAGER
+}
+
+// Модель сообщения
+model Message {
+  id          String    @id @default(uuid())
+  subject     String
+  content     String
+  createdAt   DateTime  @default(now())
+  sender      User      @relation("SentMessages", fields: [senderId], references: [id])
+  senderId    String
+  receiver    User      @relation("ReceivedMessages", fields: [receiverId], references: [id])
+  receiverId  String
+  isRead      Boolean   @default(false)
+  attachments File[]
+}
+
+// Модель задачи
+model Task {
+  id          String    @id @default(uuid())
+  title       String
+  description String?
+  priority    Int
+  status      TaskStatus
+  startDate   DateTime
+  endDate     DateTime
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  
+  creator     User      @relation("UserTasks", fields: [creatorId], references: [id])
+  creatorId   String
+  assignee    User      @relation("AssignedTasks", fields: [assigneeId], references: [id])
+  assigneeId  String
+  project     Project?  @relation(fields: [projectId], references: [id])
+  projectId   String?
+  attachments File[]
+  result      String?
+  actualTime  Float?
+}
+
+enum TaskStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+// Модель проекта
+model Project {
+  id          String    @id @default(uuid())
+  name        String
+  description String?
+  startDate   DateTime
+  endDate     DateTime
+  status      ProjectStatus
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  
+  tasks       Task[]
+  members     User[]    @relation("UserProjects")
+  documents   File[]
+}
+
+enum ProjectStatus {
+  PLANNING
+  ACTIVE
+  COMPLETED
+  ON_HOLD
+}
+
+// Модель файла
+model File {
+  id          String    @id @default(uuid())
+  name        String
+  path        String
+  type        String
+  size        Int
+  uploadedAt  DateTime  @default(now())
+  
+  message     Message?  @relation(fields: [messageId], references: [id])
+  messageId   String?
+  task        Task?     @relation(fields: [taskId], references: [id])
+  taskId      String?
+  project     Project?  @relation(fields: [projectId], references: [id])
+  projectId   String?
+}
+
+// Модель базы знаний
+model KnowledgeBase {
+  id          String    @id @default(uuid())
+  title       String
+  content     String
+  category    String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  attachments String[]
+} 
