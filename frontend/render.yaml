@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: planner-frontend
+    env: static
+    buildCommand: npm install --legacy-peer-deps && npm run build
+    staticPublishPath: ./build
+    envVars:
+      - key: REACT_APP_API_URL
+        value: https://planner-backend.onrender.com
+      - key: REACT_APP_WS_URL
+        value: wss://planner-backend.onrender.com 
