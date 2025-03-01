@@ -1,34 +1,34 @@
 import { createTheme } from '@mui/material/styles';
 
-// Создаем тему для приложения
+// Создаем тему для приложения с нежными пастельными цветами
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#2B5278', // Основной синий цвет из макета
-      light: '#4B7AB2',
-      dark: '#1C3B57',
+      main: '#9E7BB5', // Нежный лавандовый
+      light: '#BFA2D0',
+      dark: '#7C5D91',
     },
     secondary: {
-      main: '#8B0000', // Бордовый цвет
-      light: '#A93226',
-      dark: '#641E16',
+      main: '#F5B7B1', // Нежный розовый
+      light: '#F8D0CB',
+      dark: '#E08E88',
     },
     background: {
-      default: '#F5F7FA',
+      default: '#F9F7FC',
       paper: '#FFFFFF',
     },
     text: {
-      primary: '#2C3E50',
-      secondary: '#566573',
+      primary: '#4A4A4A',
+      secondary: '#7A7A7A',
     },
     error: {
-      main: '#E74C3C',
+      main: '#E57373',
     },
     warning: {
-      main: '#F39C12',
+      main: '#FFD54F',
     },
     success: {
-      main: '#27AE60',
+      main: '#81C784',
     },
   },
   typography: {

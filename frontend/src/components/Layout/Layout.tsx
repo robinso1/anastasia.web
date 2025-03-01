@@ -20,10 +20,8 @@ import {
   Assignment as TaskIcon,
   Event as EventIcon,
   Folder as ProjectIcon,
-  Archive as ArchiveIcon,
   AttachMoney as BudgetIcon,
   Contacts as ContactsIcon,
-  VerifiedUser as SignatureIcon,
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 
@@ -53,10 +51,8 @@ const menuItems = [
   { text: 'Задачи', icon: <TaskIcon />, path: '/tasks' },
   { text: 'Мероприятия', icon: <EventIcon />, path: '/events' },
   { text: 'Проекты', icon: <ProjectIcon />, path: '/projects' },
-  { text: 'Архив документов', icon: <ArchiveIcon />, path: '/documents' },
   { text: 'Сметы', icon: <BudgetIcon />, path: '/budget' },
   { text: 'Контакты', icon: <ContactsIcon />, path: '/contacts' },
-  { text: 'Электронная подпись', icon: <SignatureIcon />, path: '/signature' },
 ];
 
 interface LayoutProps {
@@ -95,7 +91,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
-            ГИПРОМЕЗ - Планировщик
+            Freestyle - Планировщик
           </Typography>
           <Avatar sx={{ bgcolor: 'secondary.main' }}>ИП</Avatar>
         </Toolbar>
@@ -122,7 +118,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         >
           <img src="/logo.png" alt="Logo" style={{ width: 40, height: 40 }} />
           <Typography variant="h6" sx={{ ml: 2 }}>
-            ГИПРОМЕЗ
+            Freestyle
           </Typography>
         </Box>
         <Divider />
