@@ -1,5 +1,6 @@
 import { createTheme } from '@mui/material/styles';
 
+// Создаем тему для приложения
 const theme = createTheme({
   palette: {
     primary: {
@@ -101,4 +102,5 @@ const theme = createTheme({
   },
 });
 
+// Экспортируем тему по умолчанию
 export default theme; 
