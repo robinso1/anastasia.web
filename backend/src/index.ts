@@ -9,6 +9,8 @@ import { Server as SocketServer } from 'socket.io';
 
 // Импорт маршрутов
 import healthRouter from './routes/health';
+import authRouter from './routes/auth';
+import { authMiddleware } from './middleware/auth';
 
 // Загрузка переменных окружения
 dotenv.config();
@@ -38,6 +40,12 @@ app.use('/uploads', express.static(uploadDir));
 
 // Маршруты
 app.use('/api/health', healthRouter);
+app.use('/api/auth', authRouter);
+
+// Защищенные маршруты (требуют аутентификации)
+// app.use('/api/tasks', authMiddleware, tasksRouter);
+// app.use('/api/projects', authMiddleware, projectsRouter);
+// app.use('/api/messages', authMiddleware, messagesRouter);
 
 // Настройка Socket.IO
 const io = new SocketServer(server, {

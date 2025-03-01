@@ -9,22 +9,28 @@ import {
   Button,
   Typography,
   CircularProgress,
+  Alert,
 } from '@mui/material';
 import authSlice from '../../store/slices/authSlice';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
+    setError(null);
     dispatch({ type: 'auth/loginStart' });
 
     try {
-      // TODO: Заменить на реальный API запрос
-      const response = await fetch('/api/auth/login', {
+      const response = await fetch(`${API_URL}/api/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -32,21 +38,30 @@ const Login: React.FC = () => {
         body: JSON.stringify({ email, password }),
       });
 
+      const data = await response.json();
+
       if (!response.ok) {
-        throw new Error('Неверный логин или пароль');
+        throw new Error(data.message || 'Ошибка входа');
       }
 
-      const data = await response.json();
       dispatch({ 
         type: 'auth/loginSuccess', 
         payload: data 
       });
+      
+      // Сохраняем токен в localStorage
+      localStorage.setItem('token', data.token);
+      
       navigate('/tasks');
     } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Ошибка входа';
+      setError(errorMessage);
       dispatch({ 
         type: 'auth/loginFailure', 
-        payload: error instanceof Error ? error.message : 'Ошибка входа' 
+        payload: errorMessage
       });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -86,6 +101,13 @@ const Login: React.FC = () => {
           <Typography component="h2" variant="h5" sx={{ mb: 3 }}>
             Вход в систему
           </Typography>
+          
+          {error && (
+            <Alert severity="error" sx={{ width: '100%', mb: 2 }}>
+              {error}
+            </Alert>
+          )}
+          
           <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1, width: '100%' }}>
             <TextField
               margin="normal"
@@ -116,9 +138,18 @@ const Login: React.FC = () => {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2, height: 48 }}
+              disabled={loading}
             >
-              Войти
+              {loading ? <CircularProgress size={24} /> : 'Войти'}
             </Button>
+            
+            <Box sx={{ mt: 2 }}>
+              <Typography variant="body2" color="text.secondary" align="center">
+                Для демо-версии используйте:<br />
+                Email: admin@gipromez.ru<br />
+                Пароль: admin123
+              </Typography>
+            </Box>
           </Box>
         </Paper>
       </Box>
