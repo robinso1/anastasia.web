@@ -20,7 +20,7 @@ async function main() {
       
       const admin = await prisma.user.create({
         data: {
-          email: 'admin@gipromez.ru',
+          email: 'admin@freestyle.ru',
           password: hashedPassword,
           firstName: 'Администратор',
           lastName: 'Системы',
@@ -36,7 +36,7 @@ async function main() {
     // Создаем тестового менеджера, если его еще нет
     const managerExists = await prisma.user.findFirst({
       where: {
-        email: 'manager@gipromez.ru',
+        email: 'manager@freestyle.ru',
       },
     });
 
@@ -45,7 +45,7 @@ async function main() {
       
       const manager = await prisma.user.create({
         data: {
-          email: 'manager@gipromez.ru',
+          email: 'manager@freestyle.ru',
           password: hashedPassword,
           firstName: 'Иван',
           lastName: 'Петров',
@@ -59,7 +59,7 @@ async function main() {
     // Создаем тестового младшего менеджера, если его еще нет
     const juniorExists = await prisma.user.findFirst({
       where: {
-        email: 'junior@gipromez.ru',
+        email: 'junior@freestyle.ru',
       },
     });
 
@@ -68,7 +68,7 @@ async function main() {
       
       const junior = await prisma.user.create({
         data: {
-          email: 'junior@gipromez.ru',
+          email: 'junior@freestyle.ru',
           password: hashedPassword,
           firstName: 'Алексей',
           lastName: 'Сидоров',

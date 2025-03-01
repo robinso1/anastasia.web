@@ -1,66 +1,65 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
 import {
-  Container,
   Box,
-  Paper,
-  TextField,
   Button,
+  TextField,
   Typography,
-  CircularProgress,
+  Paper,
+  Container,
   Alert,
+  CircularProgress,
 } from '@mui/material';
-import authSlice from '../../store/slices/authSlice';
+import { useDispatch } from 'react-redux';
+import { loginStart, loginSuccess, loginFailure } from '../../store/slices/authSlice';
+import axios from 'axios';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
+  // Получаем URL API из переменных окружения или используем значение по умолчанию
   const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
-    dispatch({ type: 'auth/loginStart' });
-
+    
     try {
-      const response = await fetch(`${API_URL}/api/auth/login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
+      dispatch(loginStart());
+      
+      const response = await axios.post(`${API_URL}/api/auth/login`, {
+        email,
+        password,
       });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || 'Ошибка входа');
-      }
-
-      dispatch({ 
-        type: 'auth/loginSuccess', 
-        payload: data 
-      });
+      
+      const { user, token } = response.data;
       
       // Сохраняем токен в localStorage
-      localStorage.setItem('token', data.token);
+      localStorage.setItem('token', token);
       
-      navigate('/tasks');
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Ошибка входа';
+      dispatch(loginSuccess({ user, token }));
+      setLoading(false);
+    } catch (error: any) {
+      console.error('Ошибка входа:', error);
+      
+      let errorMessage = 'Ошибка сервера при входе';
+      if (error.response) {
+        if (error.response.status === 401) {
+          errorMessage = 'Неверный email или пароль';
+        } else if (error.response.data && error.response.data.message) {
+          errorMessage = error.response.data.message;
+        }
+      } else if (error.request) {
+        errorMessage = 'Сервер недоступен. Проверьте подключение к интернету.';
+      }
+      
+      dispatch(loginFailure(errorMessage));
       setError(errorMessage);
-      dispatch({ 
-        type: 'auth/loginFailure', 
-        payload: errorMessage
-      });
-    } finally {
       setLoading(false);
     }
   };
@@ -69,10 +68,11 @@ const Login: React.FC = () => {
     <Container component="main" maxWidth="xs">
       <Box
         sx={{
-          marginTop: 8,
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
+          justifyContent: 'center',
+          minHeight: '100vh',
         }}
       >
         <Paper
@@ -82,32 +82,28 @@ const Login: React.FC = () => {
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
+            backgroundColor: 'background.paper',
+            borderRadius: 2,
             width: '100%',
           }}
         >
-          <Box
-            sx={{
-              mb: 3,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <img src="/logo.png" alt="Logo" style={{ width: 50, height: 50 }} />
-            <Typography component="h1" variant="h5" sx={{ ml: 2 }}>
-              ГИПРОМЕЗ
+          <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+            <img src="/logo.png" alt="Logo" style={{ width: 50, height: 50, marginRight: 16 }} />
+            <Typography component="h1" variant="h5" color="primary.main">
+              Freestyle
             </Typography>
           </Box>
-          <Typography component="h2" variant="h5" sx={{ mb: 3 }}>
+
+          <Typography component="h1" variant="h5" gutterBottom>
             Вход в систему
           </Typography>
-          
+
           {error && (
             <Alert severity="error" sx={{ width: '100%', mb: 2 }}>
               {error}
             </Alert>
           )}
-          
+
           <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1, width: '100%' }}>
             <TextField
               margin="normal"
@@ -137,16 +133,20 @@ const Login: React.FC = () => {
               type="submit"
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 2, height: 48 }}
+              sx={{ mt: 3, mb: 2, py: 1.5 }}
               disabled={loading}
             >
               {loading ? <CircularProgress size={24} /> : 'Войти'}
             </Button>
-            
-            <Box sx={{ mt: 2 }}>
-              <Typography variant="body2" color="text.secondary" align="center">
-                Для демо-версии используйте:<br />
-                Email: admin@gipromez.ru<br />
+
+            <Box sx={{ mt: 3, textAlign: 'center' }}>
+              <Typography variant="body2" color="text.secondary" gutterBottom>
+                Для демо-версии используйте:
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Email: admin@freestyle.ru
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
                 Пароль: admin123
               </Typography>
             </Box>
