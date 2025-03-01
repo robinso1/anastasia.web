@@ -2,8 +2,9 @@ services:
   - type: web
     name: anastasia-web-backend
     env: node
-    buildCommand: npm install && npm run install:backend && npm run build:backend
-    startCommand: npm run start:backend
+    rootDir: backend
+    buildCommand: npm install && npm run build
+    startCommand: npm start
     envVars:
       - key: NODE_ENV
         value: production
@@ -19,6 +20,17 @@ services:
         fromDatabase:
           name: anastasia-db
           property: connectionString
+
+  - type: web
+    name: anastasia-web-frontend
+    env: static
+    buildCommand: cd frontend && npm install && npm run build
+    staticPublishPath: ./frontend/build
+    envVars:
+      - key: REACT_APP_API_URL
+        value: https://anastasia-web-backend.onrender.com
+      - key: REACT_APP_WS_URL
+        value: wss://anastasia-web-backend.onrender.com
 
 databases:
   - name: anastasia-db
