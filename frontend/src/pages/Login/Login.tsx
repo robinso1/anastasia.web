@@ -10,7 +10,7 @@ import {
   Typography,
   CircularProgress,
 } from '@mui/material';
-import { loginStart, loginSuccess, loginFailure } from '../../store/slices/authSlice';
+import authSlice from '../../store/slices/authSlice';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -20,7 +20,7 @@ const Login: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    dispatch(loginStart());
+    dispatch({ type: 'auth/loginStart' });
 
     try {
       // TODO: Заменить на реальный API запрос
@@ -37,10 +37,16 @@ const Login: React.FC = () => {
       }
 
       const data = await response.json();
-      dispatch(loginSuccess(data));
+      dispatch({ 
+        type: 'auth/loginSuccess', 
+        payload: data 
+      });
       navigate('/tasks');
     } catch (error) {
-      dispatch(loginFailure(error instanceof Error ? error.message : 'Ошибка входа'));
+      dispatch({ 
+        type: 'auth/loginFailure', 
+        payload: error instanceof Error ? error.message : 'Ошибка входа' 
+      });
     }
   };
 
