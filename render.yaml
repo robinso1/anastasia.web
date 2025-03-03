@@ -3,7 +3,7 @@ services:
     name: anastasia-web-backend
     env: node
     rootDir: backend
-    buildCommand: curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash && export NVM_DIR="$HOME/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" && nvm install 18.19.0 && nvm use 18.19.0 && npm install && npm run build
+    buildCommand: rm -rf node_modules && npm install && npm run build
     startCommand: npm start
     envVars:
       - key: NODE_ENV

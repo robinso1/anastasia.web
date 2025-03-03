@@ -7,11 +7,11 @@
     "node": "18.x"
   },
   "scripts": {
-    "build": "npx prisma generate && tsc",
-    "start": "npx prisma generate && npx prisma migrate deploy && npm run seed && node dist/index.js",
+    "build": "./node_modules/.bin/prisma generate && tsc",
+    "start": "./node_modules/.bin/prisma generate && ./node_modules/.bin/prisma migrate deploy && npm run seed && node dist/index.js",
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
-    "prisma:generate": "prisma generate",
-    "prisma:migrate": "prisma migrate dev",
+    "prisma:generate": "./node_modules/.bin/prisma generate",
+    "prisma:migrate": "./node_modules/.bin/prisma migrate dev",
     "seed": "ts-node src/scripts/seed.ts",
     "test": "jest"
   },
