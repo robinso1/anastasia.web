@@ -24,7 +24,7 @@ const initialState: AuthState = {
   error: null,
 };
 
-const slice = createSlice({
+export const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
@@ -56,6 +56,5 @@ const slice = createSlice({
   },
 });
 
-export const authSlice = slice;
-export const { loginStart, loginSuccess, loginFailure, logout, updateUser } = slice.actions;
-export default slice.reducer; 
+export const { loginStart, loginSuccess, loginFailure, logout, updateUser } = authSlice.actions;
+export default authSlice.reducer; 
