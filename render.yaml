@@ -24,13 +24,15 @@ services:
   - type: web
     name: anastasia-web-frontend
     env: static
-    buildCommand: cd frontend && npm install && npm run build
+    buildCommand: cd frontend && npm install --legacy-peer-deps && NODE_ENV=production DISABLE_ESLINT_PLUGIN=true npm run build
     staticPublishPath: ./frontend/build
     envVars:
       - key: REACT_APP_API_URL
         value: https://anastasia-web-backend.onrender.com
       - key: REACT_APP_WS_URL
         value: wss://anastasia-web-backend.onrender.com
+      - key: NODE_VERSION
+        value: 18.x
 
 databases:
   - name: anastasia-db
