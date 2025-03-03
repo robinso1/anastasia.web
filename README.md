@@ -101,3 +101,9 @@
 2. Свяжитесь с технической поддержкой:
    - Телефон: +7 (XXX) XXX-XX-XX
    - Email: support@example.com
+
+NODE_ENV=production
+PORT=8080
+JWT_SECRET=[Generate] (нажмите кнопку Generate)
+FRONTEND_URL=https://anastasia-web-frontend.onrender.com
+UPLOAD_DIR=/tmp/uploads

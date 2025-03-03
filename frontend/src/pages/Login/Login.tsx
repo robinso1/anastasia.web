@@ -10,7 +10,7 @@ import {
   CircularProgress,
 } from '@mui/material';
 import { useDispatch } from 'react-redux';
-import { authSlice } from '../../store/slices/authSlice';
+import { loginStart, loginSuccess, loginFailure } from '../../store/slices/authActions';
 import axios from 'axios';
 
 const Login: React.FC = () => {
@@ -20,7 +20,6 @@ const Login: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   
   const dispatch = useDispatch();
-  const { loginStart, loginSuccess, loginFailure } = authSlice.actions;
 
   // Получаем URL API из переменных окружения или используем значение по умолчанию
   const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
