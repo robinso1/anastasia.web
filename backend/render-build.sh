@@ -11,8 +11,8 @@ npx prisma generate
 # Запуск миграций
 npx prisma migrate deploy
 
-# Сборка приложения
-npm run build
-
 # Инициализация базы данных
-npm run seed 
+npm run seed
+
+# Сборка приложения
+npm run build 
