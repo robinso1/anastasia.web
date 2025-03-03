@@ -3,7 +3,7 @@ services:
     name: anastasia-web-backend
     env: node
     rootDir: backend
-    buildCommand: ./render-build.sh
+    buildCommand: npm install && npx prisma generate && npx prisma migrate deploy && npm run seed && npm run build
     startCommand: npm start
     envVars:
       - key: NODE_ENV
@@ -24,7 +24,7 @@ services:
   - type: web
     name: anastasia-web-frontend
     env: static
-    buildCommand: cd frontend && npm install --legacy-peer-deps && NODE_ENV=production DISABLE_ESLINT_PLUGIN=true npm run build
+    buildCommand: cd frontend && npm install --legacy-peer-deps && npm run build
     staticPublishPath: ./frontend/build
     envVars:
       - key: REACT_APP_API_URL
