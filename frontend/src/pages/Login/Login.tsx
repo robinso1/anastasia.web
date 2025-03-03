@@ -10,7 +10,7 @@ import {
   CircularProgress,
 } from '@mui/material';
 import { useDispatch } from 'react-redux';
-import { authSlice } from '../../store/slices/authSlice';
+import { loginStart, loginSuccess, loginFailure } from '../../store/slices/authSlice';
 import axios from 'axios';
 
 const Login: React.FC = () => {
@@ -30,7 +30,7 @@ const Login: React.FC = () => {
     setError(null);
     
     try {
-      dispatch(authSlice.actions.loginStart());
+      dispatch(loginStart());
       
       const response = await axios.post(`${API_URL}/api/auth/login`, {
         email,
@@ -42,7 +42,7 @@ const Login: React.FC = () => {
       // Сохраняем токен в localStorage
       localStorage.setItem('token', token);
       
-      dispatch(authSlice.actions.loginSuccess({ user, token }));
+      dispatch(loginSuccess({ user, token }));
       setLoading(false);
     } catch (error: any) {
       console.error('Ошибка входа:', error);
@@ -58,7 +58,7 @@ const Login: React.FC = () => {
         errorMessage = 'Сервер недоступен. Проверьте подключение к интернету.';
       }
       
-      dispatch(authSlice.actions.loginFailure(errorMessage));
+      dispatch(loginFailure(errorMessage));
       setError(errorMessage);
       setLoading(false);
     }
