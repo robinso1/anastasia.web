@@ -3,7 +3,7 @@ services:
     name: anastasia-web-backend
     env: node
     rootDir: backend
-    buildCommand: ./render-build.sh
+    buildCommand: npm install && npm run build
     startCommand: npm start
     envVars:
       - key: NODE_ENV
