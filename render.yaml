@@ -20,6 +20,8 @@ services:
         fromDatabase:
           name: anastasia-db
           property: connectionString
+      - key: NODE_VERSION
+        value: 18.x
 
   - type: web
     name: anastasia-web-frontend
